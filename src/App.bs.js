@@ -10,19 +10,137 @@ var logo = LogoSvg;
 
 function App(Props) {
   return React.createElement("div", {
-              className: "App"
-            }, React.createElement("header", {
-                  className: "App-header"
-                }, React.createElement("img", {
-                      className: "App-logo",
-                      alt: "logo",
-                      src: logo
-                    }), React.createElement("p", undefined, "Edit ", React.createElement("code", undefined, "src/App.js"), " and save to reload."), React.createElement("a", {
-                      className: "App-link",
-                      href: "https://reactjs.org",
-                      rel: "noopener noreferrer",
-                      target: "_blank"
-                    }, "Learn React")));
+              className: "bg-blue-50 w-full flex justify-center items-center py-8 h-screen"
+            }, React.createElement("div", {
+                  className: "w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-1/2  \n        mx-auto py-10 bg-white flex-col justify-center items-center rounded-3xl shadow hover:shadow-md duration-4 min-h-1/2"
+                }, React.createElement("header", {
+                      className: "flex flex-column justify-center self-center h-24"
+                    }, React.createElement("h2", {
+                          className: "p-2.5 text-blue-500 text-3xl"
+                        }, "Rate Calculator")), React.createElement("div", {
+                      className: "md:grid md:grid-cols-2 md:gap-12"
+                    }, React.createElement("div", {
+                          className: "md:col-span-1"
+                        }, React.createElement("form", {
+                              className: "mx-auto w-full"
+                            }, React.createElement("label", {
+                                  className: "block font-medium text-gray-700"
+                                }, "Rate"), React.createElement("div", {
+                                  className: "mt-2 relative rounded-md shadow-sm"
+                                }, React.createElement("div", {
+                                      className: "absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                                    }, React.createElement("span", {
+                                          className: "text-gray-500 sm:text-sm"
+                                        }, "$")), React.createElement("input", {
+                                      className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md",
+                                      id: "price",
+                                      name: "price",
+                                      placeholder: "0.00",
+                                      type: "text"
+                                    }), React.createElement("div", {
+                                      className: "absolute inset-y-0 right-0 flex items-center"
+                                    }, React.createElement("label", {
+                                          className: "sr-only"
+                                        }, "Currency"), React.createElement("select", {
+                                          className: "focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md",
+                                          id: "currency",
+                                          name: "currency"
+                                        }, React.createElement("option", undefined, "USD"), React.createElement("option", undefined, "INR")))), React.createElement("div", {
+                                  className: "mt-4"
+                                }, React.createElement("label", {
+                                      className: "block font-medium text-gray-700"
+                                    }, "Duration"), React.createElement("select", {
+                                      className: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                                      id: "duration",
+                                      name: "duration"
+                                    }, React.createElement("option", undefined, "Hourly"), React.createElement("option", undefined, "Daily"), React.createElement("option", undefined, "Weekly"), React.createElement("option", undefined, "Monthly"), React.createElement("option", undefined, "Yearly"))), React.createElement("div", {
+                                  className: "mt-4"
+                                }, React.createElement("label", {
+                                      className: "block font-medium text-gray-700"
+                                    }, "Availability"), React.createElement("div", {
+                                      className: "mt-2 relative rounded-md shadow-sm"
+                                    }, React.createElement("input", {
+                                          className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md",
+                                          id: "availability",
+                                          name: "availability",
+                                          placeholder: "75",
+                                          type: "number"
+                                        }), React.createElement("div", {
+                                          className: "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                                        }, React.createElement("span", {
+                                              className: "text-gray-500 sm:text-sm"
+                                            }, "%")))), React.createElement("button", {
+                                  className: "w-full py-3 mt-10 bg-gray-800 rounded-sm\n                font-medium text-white uppercase\n                focus:outline-none hover:bg-gray-700 hover:shadow-none",
+                                  type: "submit"
+                                }, "Calculate"))), React.createElement("div", {
+                          className: "md:col-span-1 h-full w-full"
+                        }, React.createElement("div", undefined, React.createElement("label", {
+                                  className: "block font-medium  text-gray-700"
+                                }, "Currency"), React.createElement("select", {
+                                  className: "mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm \n                        focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ",
+                                  id: "dest_currency",
+                                  name: "dest_currency"
+                                }, React.createElement("option", undefined, "USD"), React.createElement("option", undefined, "INR"))), React.createElement("div", {
+                              className: "mt-2"
+                            }, React.createElement("label", {
+                                  className: "block font-medium text-gray-700"
+                                }, "Daily Rate"), React.createElement("div", {
+                                  className: "mt-2 relative rounded-md shadow-sm"
+                                }, React.createElement("input", {
+                                      className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md",
+                                      id: "availability",
+                                      name: "availability",
+                                      type: "number"
+                                    }), React.createElement("div", {
+                                      className: "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                                    }, React.createElement("span", {
+                                          className: "text-gray-500 sm:text-sm"
+                                        }, "$")))), React.createElement("div", {
+                              className: "mt-2"
+                            }, React.createElement("label", {
+                                  className: "block font-medium text-gray-700"
+                                }, "Daily Rate"), React.createElement("div", {
+                                  className: "mt-2 relative rounded-md shadow-sm"
+                                }, React.createElement("input", {
+                                      className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md",
+                                      id: "availability",
+                                      name: "availability",
+                                      type: "number"
+                                    }), React.createElement("div", {
+                                      className: "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                                    }, React.createElement("span", {
+                                          className: "text-gray-500 sm:text-sm"
+                                        }, "$")))), React.createElement("div", {
+                              className: "mt-2"
+                            }, React.createElement("label", {
+                                  className: "block font-medium text-gray-700"
+                                }, "Daily Rate"), React.createElement("div", {
+                                  className: "mt-2 relative rounded-md shadow-sm"
+                                }, React.createElement("input", {
+                                      className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md",
+                                      id: "availability",
+                                      name: "availability",
+                                      type: "number"
+                                    }), React.createElement("div", {
+                                      className: "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                                    }, React.createElement("span", {
+                                          className: "text-gray-500 sm:text-sm"
+                                        }, "$")))), React.createElement("div", {
+                              className: "mt-2"
+                            }, React.createElement("label", {
+                                  className: "block font-medium text-gray-700"
+                                }, "Daily Rate"), React.createElement("div", {
+                                  className: "mt-2 relative rounded-md shadow-sm"
+                                }, React.createElement("input", {
+                                      className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md",
+                                      id: "availability",
+                                      name: "availability",
+                                      type: "number"
+                                    }), React.createElement("div", {
+                                      className: "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+                                    }, React.createElement("span", {
+                                          className: "text-gray-500 sm:text-sm"
+                                        }, "$"))))))));
 }
 
 var make = App;
