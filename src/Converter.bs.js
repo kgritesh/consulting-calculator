@@ -3,6 +3,7 @@
 import * as Curry from "bs-platform/lib/es6/curry.js";
 import * as Js_dict from "bs-platform/lib/es6/js_dict.js";
 import * as Caml_option from "bs-platform/lib/es6/caml_option.js";
+import * as Caml_exceptions from "bs-platform/lib/es6/caml_exceptions.js";
 
 var days_in_year = 260;
 
@@ -13,12 +14,14 @@ var supported_currency = [
   /* INR */1
 ];
 
+var NotFound = Caml_exceptions.create("Converter.NotFound");
+
 function durationToString(dur) {
   switch (dur) {
-    case /* Daily */0 :
-        return "Daily";
-    case /* Hourly */1 :
+    case /* Hourly */0 :
         return "Hourly";
+    case /* Daily */1 :
+        return "Daily";
     case /* Weekly */2 :
         return "Weekly";
     case /* Monthly */3 :
@@ -26,6 +29,27 @@ function durationToString(dur) {
     case /* Yearly */4 :
         return "Yearly";
     
+  }
+}
+
+function durationFromString(dur) {
+  switch (dur) {
+    case "Daily" :
+        return /* Daily */1;
+    case "Hourly" :
+        return /* Hourly */0;
+    case "Monthly" :
+        return /* Monthly */3;
+    case "Weekly" :
+        return /* Weekly */2;
+    case "Yearly" :
+        return /* Yearly */4;
+    default:
+      throw {
+            RE_EXN_ID: NotFound,
+            _1: "No matching duration found: " + dur,
+            Error: new Error()
+          };
   }
 }
 
@@ -37,22 +61,37 @@ function currencyToString(cur) {
   }
 }
 
+function currencyFromString(cur) {
+  switch (cur) {
+    case "INR" :
+        return /* INR */1;
+    case "USD" :
+        return /* USD */0;
+    default:
+      throw {
+            RE_EXN_ID: NotFound,
+            _1: "No matching currency found: " + cur,
+            Error: new Error()
+          };
+  }
+}
+
 function currencyToSymbol(cur) {
   if (cur) {
-    return "\xe2\x82\xb9";
+    return "₹";
   } else {
     return "$";
   }
 }
 
-function converfromYearly(src, dest_type) {
+function converfromYearly(src, targetDuration) {
   var divider;
-  switch (dest_type) {
-    case /* Daily */0 :
-        divider = days_in_year;
-        break;
-    case /* Hourly */1 :
+  switch (targetDuration) {
+    case /* Hourly */0 :
         divider = hours_in_year;
+        break;
+    case /* Daily */1 :
+        divider = days_in_year;
         break;
     case /* Weekly */2 :
         divider = 52;
@@ -68,7 +107,7 @@ function converfromYearly(src, dest_type) {
   return {
           value: src.value / divider,
           currency: src.currency,
-          duration: dest_type
+          duration: targetDuration
         };
 }
 
@@ -76,11 +115,11 @@ function convertToYearly(src) {
   var match = src.duration;
   var multiplier;
   switch (match) {
-    case /* Daily */0 :
-        multiplier = days_in_year;
-        break;
-    case /* Hourly */1 :
+    case /* Hourly */0 :
         multiplier = hours_in_year;
+        break;
+    case /* Daily */1 :
+        multiplier = days_in_year;
         break;
     case /* Weekly */2 :
         multiplier = 52;
@@ -131,8 +170,11 @@ export {
   days_in_year ,
   hours_in_year ,
   supported_currency ,
+  NotFound ,
   durationToString ,
+  durationFromString ,
   currencyToString ,
+  currencyFromString ,
   currencyToSymbol ,
   converfromYearly ,
   convertToYearly ,

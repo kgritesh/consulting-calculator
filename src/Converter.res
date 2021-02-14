@@ -1,27 +1,14 @@
 open XMLHttpRequest
+open Models
 
-type currency = 
-    | USD
-    | INR
-
-type duration = 
-    | Daily
-    | Hourly
-    | Weekly
-    | Monthly
-    | Yearly
-
-type rec rate = {
-    value: float,
-    currency: currency,
-    duration: duration
-}
 
 let months_in_year = 12
 let weeks_in_year = 52
 let days_in_year = weeks_in_year * 5
 let hours_in_year = days_in_year * 8
 let supported_currency = [USD, INR]
+
+exception NotFound(string)
 
 let durationToString = (dur) => {
     switch dur {
@@ -33,6 +20,17 @@ let durationToString = (dur) => {
    }
 }
 
+let durationFromString = (dur) => {
+    switch dur {
+    | "Daily" => Daily
+    | "Hourly" => Hourly
+    | "Weekly" => Weekly
+    | "Monthly" => Monthly
+    | "Yearly" => Yearly
+    | _ => raise(NotFound(`No matching duration found: ${dur}`))
+    }
+}
+
 let currencyToString = (cur) => {
     switch  cur {
     | USD => "USD"
@@ -40,25 +38,34 @@ let currencyToString = (cur) => {
     }
 }
 
-let currencyToSymbol = (cur) => {
-    switch  cur {
-    | USD => "$"
-    | INR => "₹"
+let currencyFromString = (cur) => {
+    switch cur {
+    | "USD" => USD
+    | "INR" => INR
+    | _ => raise(NotFound(`No matching currency found: ${cur}`))
     }
 }
 
-let converfromYearly = (src: rate, dest_type: duration) => {
-   let divider = switch dest_type {
+
+let currencyToSymbol = (cur) => {
+    switch  cur {
+    | USD => "$"
+    | INR => j`₹`
+    }
+}
+
+let converfromYearly = (src: consultingRate, targetDuration: duration) => {
+   let divider = switch targetDuration {
     | Hourly => hours_in_year   
     | Daily => days_in_year
     | Weekly => weeks_in_year
     | Monthly => months_in_year
     | Yearly => 1
    } 
-   {value: src.value /. float_of_int(divider), currency: src.currency, duration: dest_type}
+   {value: src.value /. float_of_int(divider), currency: src.currency, duration: targetDuration}
 }  
 
-let convertToYearly = (src: rate) => {
+let convertToYearly = (src: consultingRate) => {
     let multiplier = switch  src.duration {
     | Hourly => hours_in_year   
     | Daily => days_in_year
