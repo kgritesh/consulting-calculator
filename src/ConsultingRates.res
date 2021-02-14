@@ -2,17 +2,32 @@ open Models
 
 @react.component
 let make = (~rate: consultingRate) => {
-  let yearlyRate = rate -> Converter.convertToYearly
-  Js.log2("Yearly Rate", yearlyRate)
-  let (targetCurrency, setTargetCurrency) = React.useState(_ => USD)    
+  let (targetCurrency, setTargetCurrency) = React.useState(_ => rate.currency) 
+  let (yearlyRate, setYearlyRate) = React.useState(_ => rate -> Converter.convertToYearly)
+
   let updateTargetCurrency = (event) => {
     let val = (event->ReactEvent.Form.target)["value"]
-    setTargetCurrency(_prev => val -> Converter.currencyFromString)
+    let target = Converter.currencyFromString(val)
+    Converter.convertByCurrency(yearlyRate, target, ~callback=(rate, error) => {
+      switch error {
+      | None => {
+        setYearlyRate(_prev=>rate)
+        setTargetCurrency(_prev => val -> Converter.currencyFromString)
+      } 
+      | Some (err) => {
+        Js.log2("Unable to fetch exchange Rates", err)
+      }
+      }
+    })
   }
+
   let getRateForDuration = (dur) => {
     let durRate = Converter.converfromYearly(yearlyRate, dur)
     durRate.value
   } 
+
+
+
 
   <div className="md:col-span-1 h-full w-full">
     <div>

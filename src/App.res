@@ -17,7 +17,7 @@ let make = ()   => {
     Js.log(values)
   }
 
-  Converter.fetchCurrencyExchangeRates(~callback, "USD", ["INR"]) 
+
   <div className="bg-blue-50 w-full flex justify-center items-center py-8 h-screen">
     <div
       className="w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-1/2  

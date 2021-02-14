@@ -2,15 +2,10 @@
 
 import * as Curry from "bs-platform/lib/es6/curry.js";
 import * as React from "react";
-import * as Converter from "./Converter.bs.js";
 import * as ConsultingForm from "./ConsultingForm.bs.js";
 import * as ConsultingRates from "./ConsultingRates.bs.js";
 
 function App(Props) {
-  var callback = function (rates, error) {
-    console.log(rates, error);
-    
-  };
   var match = React.useState(function () {
         return {
                 value: 1000,
@@ -26,7 +21,6 @@ function App(Props) {
     console.log(values);
     
   };
-  Converter.fetchCurrencyExchangeRates("USD", ["INR"], callback);
   return React.createElement("div", {
               className: "bg-blue-50 w-full flex justify-center items-center py-8 h-screen"
             }, React.createElement("div", {

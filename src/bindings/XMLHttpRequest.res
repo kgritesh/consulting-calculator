@@ -1,5 +1,7 @@
+//TODO use rescript-request
+
 type request
-type response
+type response = string
 @bs.new external makeXMLHttpRequest: unit => request = "XMLHttpRequest"
 @bs.send external addEventListener: (request, string, unit => unit) => unit = "addEventListener"
 @bs.get external response: request => response = "response"

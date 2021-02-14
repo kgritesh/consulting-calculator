@@ -4,20 +4,35 @@ import * as Curry from "bs-platform/lib/es6/curry.js";
 import * as React from "react";
 import * as Models from "./Models.bs.js";
 import * as Converter from "./Converter.bs.js";
+import * as Caml_option from "bs-platform/lib/es6/caml_option.js";
 
 function ConsultingRates(Props) {
   var rate = Props.rate;
-  var yearlyRate = Converter.convertToYearly(rate);
-  console.log("Yearly Rate", yearlyRate);
   var match = React.useState(function () {
-        return /* USD */0;
+        return rate.currency;
       });
   var setTargetCurrency = match[1];
   var targetCurrency = match[0];
+  var match$1 = React.useState(function () {
+        return Converter.convertToYearly(rate);
+      });
+  var setYearlyRate = match$1[1];
+  var yearlyRate = match$1[0];
   var updateTargetCurrency = function ($$event) {
     var val = $$event.target.value;
-    return Curry._1(setTargetCurrency, (function (_prev) {
-                  return Converter.currencyFromString(val);
+    var target = Converter.currencyFromString(val);
+    return Converter.convertByCurrency(yearlyRate, target, (function (rate, error) {
+                  if (error !== undefined) {
+                    console.log("Unable to fetch exchange Rates", Caml_option.valFromOption(error));
+                    return ;
+                  } else {
+                    Curry._1(setYearlyRate, (function (_prev) {
+                            return rate;
+                          }));
+                    return Curry._1(setTargetCurrency, (function (_prev) {
+                                  return Converter.currencyFromString(val);
+                                }));
+                  }
                 }));
   };
   return React.createElement("div", {

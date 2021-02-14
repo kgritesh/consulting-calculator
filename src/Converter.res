@@ -1,4 +1,4 @@
-open XMLHttpRequest
+
 open Models
 
 
@@ -76,12 +76,69 @@ let convertToYearly = (src: consultingRate) => {
     {value: src.value *. float_of_int(multiplier), currency: src.currency, duration: Yearly}
 }
 
-type latestRatesResponse = {
-    "rates": Js.Dict.t<string>
+let getCurrencyMap = (rateMapping: Js.Dict.t<float>) => {
+    let currencyMap = makeCurrencyMap()
+    rateMapping -> Js.Dict.entries -> Js.Array2.reduce(
+        (currencyMap, (k, v)) =>  {
+            let cur = currencyFromString(k)
+            Belt.Map.set(currencyMap, cur, v)
+        }, currencyMap
+    )
 }
 
-@bs.scope("JSON") @bs.val
+
+
+let fetchExchangeRates =  (srcCurrency: currency, ~callback) => {
+    let curStr = currencyToString(srcCurrency)
+    ExchangeRates.fetch(~src=curStr, ~callback=(rates, error) => {
+        switch error {
+        | None => callback(getCurrencyMap(rates), None)
+        | Some(err) =>  callback(makeCurrencyMap(), Some(err))
+        }        
+    })
+}
+
+let getExchangeRate = (srcCurrency: currency, targetCurrency: currency, ~callback) => {
+
+    switch Belt.Map.get(currencyRate.contents, srcCurrency) {
+        | None => {
+            fetchExchangeRates(srcCurrency, ~callback=(currencyMap, err) => {
+                switch err {
+                | Some (err) => callback(-1.0, Some(err))
+                | None => {
+                    currencyRate.contents = Belt.Map.set(currencyRate.contents, srcCurrency, currencyMap)
+                    let exchangeRate = currencyMap -> Belt.Map.get(targetCurrency)->Belt.Option.getExn                   
+                    callback(exchangeRate, None)                    
+                }     
+                }
+            })
+        }
+        | Some(currencyMap) => {
+            let exchangeRate = currencyMap -> Belt.Map.get(targetCurrency)->Belt.Option.getExn                                
+            callback(exchangeRate, None)
+        }
+    }
+}
+
+let convertByCurrency = (rate: consultingRate, target: currency, ~callback) => {
+    getExchangeRate(rate.currency, target, ~callback=(amount, error) => {
+        switch error {
+            | None => {
+                callback(
+                    {...rate, currency: target, value: amount *. rate.value}, None
+                )
+                
+            }
+            | Some(err) => callback(rate, Some(err))
+        }
+    })
+}
+
+
+
+/* @bs.scope("JSON") @bs.val
 external parseResponse: response => latestRatesResponse = "parse"
+
 
 let fetchCurrencyExchangeRates = (src: string, dest: array<string>, ~callback) => {
     let request = makeXMLHttpRequest()
@@ -109,3 +166,4 @@ let fetchCurrencyExchangeRates = (src: string, dest: array<string>, ~callback) =
     request->send
 }
 
+ */
