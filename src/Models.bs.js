@@ -27,12 +27,7 @@ function makeCurrencyMap(param) {
   return Belt_Map.make(CurrencyCmp);
 }
 
-var currencyRate = Belt_Map.fromArray(supportedCurrencies.map(function (cur) {
-          return [
-                  cur,
-                  Belt_Map.make(CurrencyCmp)
-                ];
-        }), CurrencyCmp);
+var currencyRate = Belt_Map.make(CurrencyCmp);
 
 var currencyRate$1 = {
   contents: currencyRate

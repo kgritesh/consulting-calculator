@@ -22,14 +22,22 @@ let make = (~onSubmit: (consultingRate)=> unit)   => {
         duration: Hourly,
         availability: 75
     })
+    
+    let formValToInt = (val) => int_of_string(
+        if val == "" {
+            "0"
+        } else {
+            val
+        }
+    )
 
     let updateFormValues = (field, event: ReactEvent.Form.t) => {
         let val = (event->ReactEvent.Form.target)["value"]
         switch field {
-        | Amount => setFormValues(_prev => {...formValues, amount: int_of_string(val)})
+        | Amount => setFormValues(_prev => {...formValues, amount: formValToInt(val)})
         | Currency => setFormValues(_prev => {...formValues, currency: val -> Converter.currencyFromString})
         | Duration => setFormValues(_prev => {...formValues, duration: val -> Converter.durationFromString})
-        | Availability => setFormValues(_prev => {...formValues, availability: int_of_string(val)})
+        | Availability => setFormValues(_prev => {...formValues, availability: formValToInt(val)})            
         }           
     }
 

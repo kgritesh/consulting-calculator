@@ -146,7 +146,13 @@ function convertToYearly(src) {
 function getCurrencyMap(rateMapping) {
   var currencyMap = Models.makeCurrencyMap(undefined);
   return Js_dict.entries(rateMapping).reduce((function (currencyMap, param) {
-                var cur = currencyFromString(param[0]);
+                var cur;
+                try {
+                  cur = currencyFromString(param[0]);
+                }
+                catch (exn){
+                  return currencyMap;
+                }
                 return Belt_Map.set(currencyMap, cur, param[1]);
               }), currencyMap);
 }
@@ -164,31 +170,20 @@ function fetchExchangeRates(srcCurrency, callback) {
 
 function getExchangeRate(srcCurrency, targetCurrency, callback) {
   var currencyMap = Belt_Map.get(Models.currencyRate.contents, srcCurrency);
-  if (currencyMap === undefined) {
-    return fetchExchangeRates(srcCurrency, (function (currencyMap, err) {
-                  if (err !== undefined) {
-                    return Curry._2(callback, -1.0, Caml_option.some(Caml_option.valFromOption(err)));
-                  }
-                  Models.currencyRate.contents = Belt_Map.set(Models.currencyRate.contents, srcCurrency, currencyMap);
-                  var exchangeRate = Belt_Option.getExn(Belt_Map.get(currencyMap, targetCurrency));
-                  return Curry._2(callback, exchangeRate, undefined);
-                }));
+  if (currencyMap !== undefined) {
+    var exchangeRate = Belt_Option.getExn(Belt_Map.get(Caml_option.valFromOption(currencyMap), targetCurrency));
+    return Curry._2(callback, exchangeRate, undefined);
   }
-  var exchangeRate = Belt_Option.getExn(Belt_Map.get(Caml_option.valFromOption(currencyMap), targetCurrency));
-  return Curry._2(callback, exchangeRate, undefined);
-}
-
-function convertByCurrency(rate, target, callback) {
-  return getExchangeRate(rate.currency, target, (function (amount, error) {
-                if (error !== undefined) {
-                  return Curry._2(callback, rate, Caml_option.some(Caml_option.valFromOption(error)));
-                } else {
-                  return Curry._2(callback, {
-                              value: amount * rate.value,
-                              currency: target,
-                              duration: rate.duration
-                            }, undefined);
+  console.log("Currency Map doestn have " + (
+        srcCurrency ? "INR" : "USD"
+      ) + ", Fetching");
+  return fetchExchangeRates(srcCurrency, (function (currencyMap, err) {
+                if (err !== undefined) {
+                  return Curry._2(callback, -1.0, Caml_option.some(Caml_option.valFromOption(err)));
                 }
+                Models.currencyRate.contents = Belt_Map.set(Models.currencyRate.contents, srcCurrency, currencyMap);
+                var exchangeRate = Belt_Option.getExn(Belt_Map.get(currencyMap, targetCurrency));
+                return Curry._2(callback, exchangeRate, undefined);
               }));
 }
 
@@ -213,7 +208,6 @@ export {
   getCurrencyMap ,
   fetchExchangeRates ,
   getExchangeRate ,
-  convertByCurrency ,
   
 }
 /* Models Not a pure module */

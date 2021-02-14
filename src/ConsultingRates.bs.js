@@ -14,20 +14,30 @@ function ConsultingRates(Props) {
   var setTargetCurrency = match[1];
   var targetCurrency = match[0];
   var match$1 = React.useState(function () {
-        return Converter.convertToYearly(rate);
+        return 1.00;
       });
-  var setYearlyRate = match$1[1];
-  var yearlyRate = match$1[0];
+  var setExchangeFactor = match$1[1];
+  var exchangeFactor = match$1[0];
+  var yearlyRate = Converter.convertToYearly(rate);
+  React.useEffect((function () {
+          Curry._1(setTargetCurrency, (function (_prev) {
+                  return rate.currency;
+                }));
+          Curry._1(setExchangeFactor, (function (_prev) {
+                  return 1.00;
+                }));
+          
+        }), [rate]);
   var updateTargetCurrency = function ($$event) {
     var val = $$event.target.value;
     var target = Converter.currencyFromString(val);
-    return Converter.convertByCurrency(yearlyRate, target, (function (rate, error) {
+    return Converter.getExchangeRate(yearlyRate.currency, target, (function (ex, error) {
                   if (error !== undefined) {
                     console.log("Unable to fetch exchange Rates", Caml_option.valFromOption(error));
                     return ;
                   } else {
-                    Curry._1(setYearlyRate, (function (_prev) {
-                            return rate;
+                    Curry._1(setExchangeFactor, (function (_prev) {
+                            return ex;
                           }));
                     return Curry._1(setTargetCurrency, (function (_prev) {
                                   return Converter.currencyFromString(val);
@@ -35,6 +45,13 @@ function ConsultingRates(Props) {
                   }
                 }));
   };
+  var getRateForDuration = function (dur) {
+    var durRate = Converter.converfromYearly(yearlyRate, dur);
+    return durRate.value * exchangeFactor;
+  };
+  var formatAmount = (function(amount) {
+      return amount.toLocaleString()
+    });
   return React.createElement("div", {
               className: "md:col-span-1 h-full w-full"
             }, React.createElement("div", undefined, React.createElement("label", {
@@ -54,6 +71,7 @@ function ConsultingRates(Props) {
                           return dur !== rate.duration;
                         }).map(function (dur) {
                         return React.createElement("div", {
+                                    key: Converter.durationToString(dur),
                                     className: "mt-2"
                                   }, React.createElement("label", {
                                         className: "block font-medium text-gray-700"
@@ -64,8 +82,8 @@ function ConsultingRates(Props) {
                                             className: "focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md",
                                             disabled: true,
                                             name: Converter.durationToString(dur),
-                                            type: "number",
-                                            value: Converter.converfromYearly(yearlyRate, dur).value.toFixed(2)
+                                            type: "text",
+                                            value: formatAmount(getRateForDuration(dur))
                                           }), React.createElement("div", {
                                             className: "absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
                                           }, React.createElement("span", {

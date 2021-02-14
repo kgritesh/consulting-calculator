@@ -8,18 +8,20 @@ import * as ConsultingRates from "./ConsultingRates.bs.js";
 function App(Props) {
   var match = React.useState(function () {
         return {
-                value: 1000,
+                value: 0,
                 currency: /* USD */0,
                 duration: /* Hourly */0
               };
       });
   var setRate = match[1];
+  var rate = match[0];
+  React.useState(function () {
+        return rate.currency;
+      });
   var onSubmit = function (values) {
-    Curry._1(setRate, (function (_prev) {
-            return values;
-          }));
-    console.log(values);
-    
+    return Curry._1(setRate, (function (_prev) {
+                  return values;
+                }));
   };
   return React.createElement("div", {
               className: "bg-blue-50 w-full flex justify-center items-center py-8 h-screen"
@@ -34,7 +36,7 @@ function App(Props) {
                     }, React.createElement(ConsultingForm.make, {
                           onSubmit: onSubmit
                         }), React.createElement(ConsultingRates.make, {
-                          rate: match[0]
+                          rate: rate
                         }))));
 }
 

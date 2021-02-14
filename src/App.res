@@ -7,16 +7,16 @@ let make = ()   => {
   }
 
   let (rate, setRate) = React.useState(_ => {
-    value: float_of_int(1000),
+    value: float_of_int(0),
     currency: USD,
     duration: Hourly
   })
 
+  let (targetCurrency, setTargetCurrency) = React.useState(_ => rate.currency) 
+
   let onSubmit = (values: consultingRate) => {
     setRate(_prev =>values)
-    Js.log(values)
   }
-
 
   <div className="bg-blue-50 w-full flex justify-center items-center py-8 h-screen">
     <div
@@ -27,7 +27,7 @@ let make = ()   => {
       </header>
       <div className="md:grid md:grid-cols-2 md:gap-12">
         <ConsultingForm onSubmit={onSubmit} />
-        <ConsultingRates rate={rate} />
+        <ConsultingRates rate={rate}  />
       </div>
     </div>
   </div>

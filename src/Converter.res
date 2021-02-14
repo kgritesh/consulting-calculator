@@ -80,8 +80,11 @@ let getCurrencyMap = (rateMapping: Js.Dict.t<float>) => {
     let currencyMap = makeCurrencyMap()
     rateMapping -> Js.Dict.entries -> Js.Array2.reduce(
         (currencyMap, (k, v)) =>  {
-            let cur = currencyFromString(k)
-            Belt.Map.set(currencyMap, cur, v)
+            switch(currencyFromString(k)) {
+            | cur => Belt.Map.set(currencyMap, cur, v)
+            | exception _ => currencyMap 
+            }
+            
         }, currencyMap
     )
 }
@@ -102,14 +105,15 @@ let getExchangeRate = (srcCurrency: currency, targetCurrency: currency, ~callbac
 
     switch Belt.Map.get(currencyRate.contents, srcCurrency) {
         | None => {
+            Js.log(`Currency Map doestn have ${srcCurrency -> currencyToString}, Fetching`)
             fetchExchangeRates(srcCurrency, ~callback=(currencyMap, err) => {
                 switch err {
-                | Some (err) => callback(-1.0, Some(err))
-                | None => {
-                    currencyRate.contents = Belt.Map.set(currencyRate.contents, srcCurrency, currencyMap)
-                    let exchangeRate = currencyMap -> Belt.Map.get(targetCurrency)->Belt.Option.getExn                   
-                    callback(exchangeRate, None)                    
-                }     
+                    | Some (err) => callback(-1.0, Some(err))
+                    | None => {
+                        currencyRate.contents = Belt.Map.set(currencyRate.contents, srcCurrency, currencyMap)
+                        let exchangeRate = currencyMap -> Belt.Map.get(targetCurrency)->Belt.Option.getExn                   
+                        callback(exchangeRate, None)                    
+                    }     
                 }
             })
         }
@@ -118,20 +122,6 @@ let getExchangeRate = (srcCurrency: currency, targetCurrency: currency, ~callbac
             callback(exchangeRate, None)
         }
     }
-}
-
-let convertByCurrency = (rate: consultingRate, target: currency, ~callback) => {
-    getExchangeRate(rate.currency, target, ~callback=(amount, error) => {
-        switch error {
-            | None => {
-                callback(
-                    {...rate, currency: target, value: amount *. rate.value}, None
-                )
-                
-            }
-            | Some(err) => callback(rate, Some(err))
-        }
-    })
 }
 
 

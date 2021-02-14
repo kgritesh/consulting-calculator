@@ -18,13 +18,16 @@ function ConsultingForm(Props) {
       });
   var setFormValues = match[1];
   var formValues = match[0];
+  var formValToInt = function (val) {
+    return Caml_format.caml_int_of_string(val === "" ? "0" : val);
+  };
   var updateFormValues = function (field, $$event) {
     var val = $$event.target.value;
     switch (field) {
       case /* Amount */0 :
           return Curry._1(setFormValues, (function (_prev) {
                         return {
-                                amount: Caml_format.caml_int_of_string(val),
+                                amount: formValToInt(val),
                                 currency: formValues.currency,
                                 duration: formValues.duration,
                                 availability: formValues.availability
@@ -54,7 +57,7 @@ function ConsultingForm(Props) {
                                 amount: formValues.amount,
                                 currency: formValues.currency,
                                 duration: formValues.duration,
-                                availability: Caml_format.caml_int_of_string(val)
+                                availability: formValToInt(val)
                               };
                       }));
       

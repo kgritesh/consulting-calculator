@@ -3,15 +3,22 @@ open Models
 @react.component
 let make = (~rate: consultingRate) => {
   let (targetCurrency, setTargetCurrency) = React.useState(_ => rate.currency) 
-  let (yearlyRate, setYearlyRate) = React.useState(_ => rate -> Converter.convertToYearly)
+  let (exchangeFactor, setExchangeFactor) = React.useState(_ => 1.00)
+  let yearlyRate = rate -> Converter.convertToYearly
+
+  React.useEffect1(() => {
+    setTargetCurrency(_prev => rate.currency)     
+    setExchangeFactor(_prev => 1.00)
+    None
+  }, [rate])
 
   let updateTargetCurrency = (event) => {
     let val = (event->ReactEvent.Form.target)["value"]
     let target = Converter.currencyFromString(val)
-    Converter.convertByCurrency(yearlyRate, target, ~callback=(rate, error) => {
+    Converter.getExchangeRate(yearlyRate.currency, target, ~callback=(ex, error) => {
       switch error {
       | None => {
-        setYearlyRate(_prev=>rate)
+        setExchangeFactor(_prev=>ex)
         setTargetCurrency(_prev => val -> Converter.currencyFromString)
       } 
       | Some (err) => {
@@ -23,11 +30,14 @@ let make = (~rate: consultingRate) => {
 
   let getRateForDuration = (dur) => {
     let durRate = Converter.converfromYearly(yearlyRate, dur)
-    durRate.value
+    durRate.value *. exchangeFactor
   } 
 
-
-
+  let formatAmount = %raw(`
+    function(amount) {
+      return amount.toLocaleString()
+    }
+  `)
 
   <div className="md:col-span-1 h-full w-full">
     <div>
@@ -53,17 +63,17 @@ let make = (~rate: consultingRate) => {
         supportedDurations -> Js.Array2.filter(
             dur => dur != rate.duration
         ) -> Js.Array2.map((dur) => {
-          <div className="mt-2">
+          <div className="mt-2" key={{dur->Converter.durationToString}}>
             <label className="block font-medium text-gray-700"> 
                 {React.string(`${Converter.durationToString(dur)} Rate`)} 
             </label>
             <div className="mt-2 relative rounded-md shadow-sm">
               <input
-                type_="number"
+                type_="text"
                 name={dur->Converter.durationToString}
                 key={{dur->Converter.durationToString}}
                 disabled=true
-                value={Js.Float.toFixedWithPrecision(dur -> getRateForDuration, ~digits=2)}
+                value={formatAmount(dur -> getRateForDuration)}
                 className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
               />
               <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
