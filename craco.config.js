@@ -6,8 +6,7 @@ module.exports = {
     },
   },
   eslint: {
-    mode: ESLINT_MODES.file,
-    // Add `"eslintIgnore":["./src/**/*.js"],` to your `package.json`
+    mode: ESLINT_MODES.file,    
     loaderOptions: (eslintOptions) => {
       return { ...eslintOptions, ignore: true };
     },

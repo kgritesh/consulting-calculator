@@ -60,12 +60,10 @@ let make = (~rate: consultingRate) => {
     </div>
     <React.Fragment>
       {
-        supportedDurations -> Js.Array2.filter(
-            dur => dur != rate.duration
-        ) -> Js.Array2.map((dur) => {
+        supportedDurations -> Js.Array2.map((dur) => {
           <div className="mt-2" key={{dur->Converter.durationToString}}>
             <label className="block font-medium text-gray-700"> 
-                {React.string(`${Converter.durationToString(dur)} Rate`)} 
+                {React.string(`${Converter.durationToString(dur)} Earning`)} 
             </label>
             <div className="mt-2 relative rounded-md shadow-sm">
               <input

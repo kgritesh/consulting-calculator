@@ -99,7 +99,9 @@ let make = (~onSubmit: (consultingRate)=> unit)   => {
                 className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none 
                         focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                     {
-                        supportedDurations -> Js.Array2.map(dur => {
+                        supportedDurations -> Js.Array2.filter(
+                            dur => dur != Yearly
+                        )  -> Js.Array2.map(dur => {
                             <option key={Converter.durationToString(dur)}> 
                                 {React.string(Converter.durationToString(dur))} 
                             </option>

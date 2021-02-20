@@ -67,15 +67,13 @@ function ConsultingRates(Props) {
                                       key: Converter.currencyToString(cur)
                                     }, Converter.currencyToString(cur));
                         }))), React.createElement(React.Fragment, {
-                  children: Models.supportedDurations.filter(function (dur) {
-                          return dur !== rate.duration;
-                        }).map(function (dur) {
+                  children: Models.supportedDurations.map(function (dur) {
                         return React.createElement("div", {
                                     key: Converter.durationToString(dur),
                                     className: "mt-2"
                                   }, React.createElement("label", {
                                         className: "block font-medium text-gray-700"
-                                      }, Converter.durationToString(dur) + " Rate"), React.createElement("div", {
+                                      }, Converter.durationToString(dur) + " Earning"), React.createElement("div", {
                                         className: "mt-2 relative rounded-md shadow-sm"
                                       }, React.createElement("input", {
                                             key: Converter.durationToString(dur),

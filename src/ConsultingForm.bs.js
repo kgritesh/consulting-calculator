@@ -122,7 +122,9 @@ function ConsultingForm(Props) {
                           onChange: (function (param) {
                               return updateFormValues(/* Duration */2, param);
                             })
-                        }, Models.supportedDurations.map(function (dur) {
+                        }, Models.supportedDurations.filter(function (dur) {
+                                return dur !== /* Yearly */4;
+                              }).map(function (dur) {
                               return React.createElement("option", {
                                           key: Converter.durationToString(dur)
                                         }, Converter.durationToString(dur));

@@ -1,5 +1,5 @@
 {
-  "name": "rescript-project-template",
+  "name": "consulting-calculator",
   "version": "0.0.1",
   "scripts": {
     "start": "run-p start:*",
@@ -11,7 +11,7 @@
   "keywords": [
     "rescript"
   ],
-  "author": "",
+  "author": "Ritesh Kadmawala<ritesh@vertexcover.io>",
   "license": "MIT",
   "devDependencies": {
     "@craco/craco": "^6.1.0",
@@ -30,12 +30,17 @@
     "react-dom": "^17.0.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2"
   },
-  "eslintConfig": {
+  "eslintIgnore":["./src/**/*.bs.js"],
+  "eslintConfig": {    
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-throw-literal": 0
+    }
   },
+
   "browserslist": {
     "production": [
       ">0.2%",
