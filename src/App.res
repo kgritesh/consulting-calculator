@@ -2,17 +2,11 @@ open Models
 
 @react.component
 let make = ()   => {   
-  let callback = (rates, error) => {
-    Js.log2(rates, error)
-  }
-
   let (rate, setRate) = React.useState(_ => {
     value: float_of_int(0),
     currency: USD,
     duration: Hourly
-  })
-
-  let (targetCurrency, setTargetCurrency) = React.useState(_ => rate.currency) 
+  })  
 
   let onSubmit = (values: consultingRate) => {
     setRate(_prev =>values)

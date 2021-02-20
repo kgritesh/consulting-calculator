@@ -1,6 +1,6 @@
-# ReScript Project Template
+# Consulting Rate Calculator
 
-The only official ReScript starter template.
+A Very simple consulting rate calculator that let you enter your rates (hourly/daily/weekly/monthly/yearly) and gives you values other duration. Made using rescript, react and tailwind.
 
 ## Installation
 
@@ -13,9 +13,3 @@ npm install
 - Build: `npm run build`
 - Clean: `npm run clean`
 - Build & watch: `npm run start`
-
-## Run
-
-```sh
-node src/Demo.bs.js
-```

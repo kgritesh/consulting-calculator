@@ -5,7 +5,7 @@
     "start": "run-p start:*",
     "start:re": "bsb -make-world -w",
     "start:cra": "craco start",
-    "build": "craco build",
+    "build": "bsb -make-world && craco build",
     "clean": "bsb -clean-world"
   },
   "keywords": [

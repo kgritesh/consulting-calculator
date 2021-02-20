@@ -14,10 +14,6 @@ function App(Props) {
               };
       });
   var setRate = match[1];
-  var rate = match[0];
-  React.useState(function () {
-        return rate.currency;
-      });
   var onSubmit = function (values) {
     return Curry._1(setRate, (function (_prev) {
                   return values;
@@ -36,7 +32,7 @@ function App(Props) {
                     }, React.createElement(ConsultingForm.make, {
                           onSubmit: onSubmit
                         }), React.createElement(ConsultingRates.make, {
-                          rate: rate
+                          rate: match[0]
                         }))));
 }
 
